@@ -18,9 +18,6 @@ public class WaveSpawner : MonoBehaviour {
     [SerializeField]
     private Text waveCountDownTimer;
 
-    [SerializeField]
-    private Text waveText;
-
     private int waveNumber = 0;
 	void Start () {
 		
@@ -35,8 +32,7 @@ public class WaveSpawner : MonoBehaviour {
         }
         countDown -= Time.deltaTime;
         waveCountDownTimer.text = Mathf.Round(countDown).ToString();
-        waveText.text = "[Wave|"+ waveNumber +"]";
-    }
+	}
     IEnumerator spawnWave ()
     {
         waveNumber++;
