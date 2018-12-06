@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FPS_Controler : MonoBehaviour {
-
+    GUITexture gt;
+    bool wasLocked = false;
     public float speed = 10f;
     public float sensitivity = 2f;
     private float xAxisClamp = 0.0f;
+    public float jumpSpeed = 8.0f;
+    public float gravity = 20.0f;
+    private Vector3 moveDirection = Vector3.zero;
 
     CharacterController player;
     public GameObject eyes;
-    float FB;
-    float LR;
 
     float rotX;
     float rotY;
@@ -20,16 +22,31 @@ public class FPS_Controler : MonoBehaviour {
 
     private void Awake()
     {
-        //LockCursor();
+        gt = GetComponent<GUITexture>();
         player = GetComponent<CharacterController>();
+        gameObject.transform.position = new Vector3(0, 5, 0);
     }
 
-   /* public void LockCursor()
+    void DidLockCursor()
     {
-        LockCursor.LockState = CursorLockMode.Locked;
-    }*/
-	
-	void Update () {
+        Debug.Log("Locking cursor");
+
+        // Disable the button
+        gt.enabled = false;
+    }
+    void DidUnlockCursor()
+    {
+        Debug.Log("Unlocking cursor");
+
+        // Show the button again
+        gt.enabled = true;
+    }
+
+
+    void Update () {
+        if (Input.GetKeyDown("r")) Screen.lockCursor = true;
+        if (Input.GetKeyDown("t")) Screen.lockCursor = false;
+
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -40,16 +57,25 @@ public class FPS_Controler : MonoBehaviour {
             }
             else Sprint = true;
         }
-        if (Sprint == true) speed = 20f; 
+        if (Sprint == true) speed = 20f;
+ 
+            if (player.isGrounded)
+            {
+                moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+                moveDirection = transform.TransformDirection(moveDirection);
+                moveDirection = moveDirection * speed;
 
-        FB = Input.GetAxis("Horizontal") * speed;
-        LR = Input.GetAxis("Vertical") * speed;
+                if (Input.GetButton("Jump"))
+                {
+                    moveDirection.y = jumpSpeed;
+                }
+            }
 
-        rotX = Input.GetAxis("Mouse X") * sensitivity;
-        rotY = Input.GetAxis("Mouse Y") * sensitivity;
+            rotX = Input.GetAxis("Mouse X") * sensitivity;
+            rotY = Input.GetAxis("Mouse Y") * sensitivity;
 
         xAxisClamp += rotY;
-        
+
         if (xAxisClamp > 90.0f)
         {
             xAxisClamp = 90.0f;
@@ -60,14 +86,9 @@ public class FPS_Controler : MonoBehaviour {
             xAxisClamp = -90.0f;
             rotY = 0.0f;
         }
-        Vector3 forwardMovement = transform.forward * LR;
-        Vector3 rightMovement = transform.forward * LR;
-        charController.SimpleMove(forwardMovement + rightMovement);
-
-        Vector3 Mouvement = new Vector3(FB, 0, LR);
         transform.Rotate(0, rotX, 0);
         eyes.transform.Rotate(-rotY, 0, 0);
-        Mouvement = transform.rotation * Mouvement;
-        player.Move (Mouvement * Time.deltaTime);
-	}
+        moveDirection.y = moveDirection.y - (gravity * Time.deltaTime);
+            player.Move(moveDirection * Time.deltaTime);
+    }
 }
