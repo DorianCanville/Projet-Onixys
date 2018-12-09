@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FPS_Controler : MonoBehaviour {
-    GUITexture gt;
-    bool wasLocked = false;
     public float speed = 10f;
     public float sensitivity = 2f;
     private float xAxisClamp = 0.0f;
@@ -22,33 +20,16 @@ public class FPS_Controler : MonoBehaviour {
 
     private void Awake()
     {
-        gt = GetComponent<GUITexture>();
         player = GetComponent<CharacterController>();
         gameObject.transform.position = new Vector3(0, 5, 0);
     }
 
-    void DidLockCursor()
-    {
-        Debug.Log("Locking cursor");
-
-        // Disable the button
-        gt.enabled = false;
-    }
-    void DidUnlockCursor()
-    {
-        Debug.Log("Unlocking cursor");
-
-        // Show the button again
-        gt.enabled = true;
-    }
-
-
     void Update () {
-        if (Input.GetKeyDown("r")) Screen.lockCursor = true;
-        if (Input.GetKeyDown("t")) Screen.lockCursor = false;
+        if (Input.GetKeyDown("r")) Cursor.lockState = CursorLockMode.Locked;
+        if (Input.GetKeyDown("t")) Cursor.lockState = CursorLockMode.None;
 
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             if (Sprint == true)
             {
@@ -89,6 +70,6 @@ public class FPS_Controler : MonoBehaviour {
         transform.Rotate(0, rotX, 0);
         eyes.transform.Rotate(-rotY, 0, 0);
         moveDirection.y = moveDirection.y - (gravity * Time.deltaTime);
-            player.Move(moveDirection * Time.deltaTime);
+        player.Move(moveDirection * Time.deltaTime);
     }
 }

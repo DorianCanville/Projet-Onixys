@@ -20,7 +20,6 @@ private float fireCountdown = 0f;
 public GameObject bulletPrefab;
 public Transform firePoint;
 
-// Use this for initialization
 void Start()
 {
     InvokeRepeating("UpdateTarget", 0f, 0.5f);
@@ -51,8 +50,7 @@ void UpdateTarget()
         target = null;
     }
 }
-
-// Update is called once per frame
+ 
 void Update()
 {
     if (target == null)

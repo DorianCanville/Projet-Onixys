@@ -18,12 +18,11 @@ public class WaveSpawner : MonoBehaviour {
     [SerializeField]
     private Text waveCountDownTimer;
 
+    [SerializeField]
+    private Text WaveText;
+
     private int waveNumber = 0;
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		if (countDown <= 0.2f)
         {
@@ -36,6 +35,7 @@ public class WaveSpawner : MonoBehaviour {
     IEnumerator spawnWave ()
     {
         waveNumber++;
+        WaveText.text = "[Wave|" + waveNumber + "]";
         for (int i = 0; i < waveNumber; i++)
         {
             spawnEnemy();
