@@ -15,7 +15,6 @@ public class Bullet : MonoBehaviour {
         target = _target;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (target == null)
