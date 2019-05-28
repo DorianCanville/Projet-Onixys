@@ -6,6 +6,7 @@ public class Node : MonoBehaviour
 {
 
     public Color hoverColor = Color.cyan;
+    public Color notEnoughMoneyColor = Color.red;
     public Vector3 positionOffset;
     private Color startColor;
     public GameObject turret;
@@ -40,6 +41,10 @@ public class Node : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (buildManager.hasMoney)
+        {
+            rend.material.color = notEnoughMoneyColor;
+        }
         if (!buildManager.canBuild)
         {
             return;
